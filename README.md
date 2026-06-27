@@ -257,6 +257,13 @@ The GitHub Pages version uses the static files at the repository root:
 
 It includes demo activity data entry using browser `localStorage`. This is useful for portfolio demos and client walkthroughs, but it is not a shared database.
 
+GitHub Pages demo also supports a portable demo workspace:
+
+- create or edit a demo company profile
+- add custom activity records
+- export the workspace as a `.json` file
+- import that `.json` file on another computer/browser to continue the demo
+
 For real multi-user data entry, deploy the Next.js app with PostgreSQL. See [`docs/deployment.md`](docs/deployment.md).
 
 ## 12. Environment Variables

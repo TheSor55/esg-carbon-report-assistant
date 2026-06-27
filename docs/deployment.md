@@ -41,8 +41,26 @@ Current demo entry behavior:
 - Dashboard totals update immediately.
 - Activity rows are saved to browser `localStorage`.
 - Users can delete custom rows or reset custom demo data.
+- Users can create/edit a demo company profile from the Dashboard.
+- Users can export the demo workspace as a `.json` file.
+- Users can import that `.json` file on another computer/browser to continue the demo.
 - Data is not shared with other users.
 - Data is not saved to PostgreSQL.
+
+## Moving Demo Data To Another Computer
+
+Use this when presenting the GitHub Pages demo without a real database.
+
+1. Open the GitHub Pages demo.
+2. On the Dashboard, fill in the demo company profile.
+3. Go to Activity Data and add activity records.
+4. Return to the Dashboard.
+5. Click **Export file**.
+6. Move the downloaded `.json` file to another computer.
+7. Open the GitHub Pages demo on the other computer.
+8. Click **Import file** and select the `.json` file.
+
+The imported data will be stored in that browser's `localStorage`.
 
 ## Production-Like Data Entry Deployment
 
