@@ -246,6 +246,19 @@ npm run test
 npm run build
 ```
 
+### GitHub Pages Demo
+
+The GitHub Pages version uses the static files at the repository root:
+
+- `index.html`
+- `styles.css`
+- `app.js`
+- `demo-entry.js`
+
+It includes demo activity data entry using browser `localStorage`. This is useful for portfolio demos and client walkthroughs, but it is not a shared database.
+
+For real multi-user data entry, deploy the Next.js app with PostgreSQL. See [`docs/deployment.md`](docs/deployment.md).
+
 ## 12. Environment Variables
 
 | Variable | Required | Description |
@@ -254,6 +267,14 @@ npm run build
 | `NEXT_PUBLIC_APP_NAME` | Optional | Public app display name. Safe because it is exposed to the browser. |
 
 Do not commit real `.env` files. This repository only includes `.env.example` with placeholder values.
+
+## 12.1 Deployment Modes
+
+| Mode | URL / Host | Data Persistence | Best For |
+| --- | --- | --- | --- |
+| GitHub Pages Static Demo | GitHub Pages | Browser `localStorage` only | Portfolio, demo, quick user preview |
+| Next.js Demo Mode | Next.js hosting without `DATABASE_URL` | In-repository sample data | MVP walkthrough |
+| Next.js Database Mode | Next.js hosting + PostgreSQL | Shared database through Prisma | Real data entry foundation |
 
 ## 13. Screenshots
 

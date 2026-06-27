@@ -1,4 +1,4 @@
-<!doctype html>
+﻿<!doctype html>
 <html lang="th">
   <head>
     <meta charset="utf-8" />
@@ -23,24 +23,25 @@
 
     <main class="shell">
       <header class="topbar">
-        <div><p class="eyebrow" data-i18n="eyebrow">Phase 1 Prototype</p><h1 data-i18n="title">ระบบผู้ช่วยจัดทำรายงานคาร์บอนและ ESG</h1></div>
+        <div><p class="eyebrow" data-i18n="eyebrow">Phase 1 Prototype</p><h1 data-i18n="title">เธฃเธฐเธเธเธเธนเนเธเนเธงเธขเธเธฑเธ”เธ—เธณเธฃเธฒเธขเธเธฒเธเธเธฒเธฃเนเธเธญเธเนเธฅเธฐ ESG</h1></div>
         <div class="toolbar"><select id="periodSelect" aria-label="Reporting period"><option value="2026">FY2026</option><option value="2025">FY2025</option></select><button id="languageToggle" class="ghost-button" type="button">EN</button></div>
       </header>
 
       <section id="dashboard" class="view active">
-        <div class="section-heading"><div><p class="eyebrow" data-i18n="dashboardEyebrow">Executive dashboard</p><h2 data-i18n="dashboardTitle">ภาพรวมการปล่อยก๊าซเรือนกระจก</h2></div><span class="status-pill" data-i18n="verificationStatus">พร้อมตรวจทานเบื้องต้น</span></div>
+        <div class="section-heading"><div><p class="eyebrow" data-i18n="dashboardEyebrow">Executive dashboard</p><h2 data-i18n="dashboardTitle">เธ เธฒเธเธฃเธงเธกเธเธฒเธฃเธเธฅเนเธญเธขเธเนเธฒเธเน€เธฃเธทเธญเธเธเธฃเธฐเธเธ</h2></div><span class="status-pill" data-i18n="verificationStatus">เธเธฃเนเธญเธกเธ•เธฃเธงเธเธ—เธฒเธเน€เธเธทเนเธญเธเธ•เนเธ</span></div>
         <div class="metrics-grid" id="metricsGrid"></div>
-        <div class="content-grid"><section class="panel"><h3 data-i18n="scopeBreakdown">สรุปตาม Scope</h3><div id="scopeBars"></div></section><section class="panel"><h3 data-i18n="siteBreakdown">สรุปตามสถานประกอบการ</h3><div id="siteTable"></div></section></div>
+        <div class="content-grid"><section class="panel"><h3 data-i18n="scopeBreakdown">เธชเธฃเธธเธเธ•เธฒเธก Scope</h3><div id="scopeBars"></div></section><section class="panel"><h3 data-i18n="siteBreakdown">เธชเธฃเธธเธเธ•เธฒเธกเธชเธ–เธฒเธเธเธฃเธฐเธเธญเธเธเธฒเธฃ</h3><div id="siteTable"></div></section></div>
       </section>
 
-      <section id="activity" class="view"><div class="section-heading"><div><p class="eyebrow">Activity data</p><h2 data-i18n="activityTitle">ข้อมูลกิจกรรม</h2></div></div><div class="panel table-panel"><table><thead><tr><th data-i18n="activity">กิจกรรม</th><th data-i18n="site">สถานที่</th><th data-i18n="scope">Scope</th><th data-i18n="quantity">ปริมาณ</th><th data-i18n="factor">Factor</th><th data-i18n="emissions">tCO2e</th><th data-i18n="evidence">หลักฐาน</th></tr></thead><tbody id="activityRows"></tbody></table></div></section>
-      <section id="factors" class="view"><div class="section-heading"><div><p class="eyebrow">Emission factor master</p><h2 data-i18n="factorTitle">ฐานข้อมูลค่า Emission Factor</h2></div></div><div class="panel table-panel"><table><thead><tr><th data-i18n="sourceName">แหล่งกำเนิด</th><th data-i18n="factor">Factor</th><th data-i18n="unit">หน่วย</th><th data-i18n="source">ที่มา</th><th data-i18n="year">ปี</th></tr></thead><tbody id="factorRows"></tbody></table></div></section>
-      <section id="project" class="view"><div class="section-heading"><div><p class="eyebrow">ISO 14064-2:2019</p><h2 data-i18n="projectTitle">บัญชีก๊าซเรือนกระจกระดับโครงการ</h2></div></div><div id="projectCards" class="cards-grid"></div></section>
-      <section id="planning" class="view"><div class="section-heading"><div><p class="eyebrow">Carbon management planning</p><h2 data-i18n="planningTitle">แผนบริหารจัดการคาร์บอน</h2></div></div><div class="content-grid"><section class="panel"><h3 data-i18n="targetPathway">เป้าหมายและเส้นทางลดคาร์บอน</h3><div id="targetSummary"></div></section><section class="panel"><h3 data-i18n="initiatives">มาตรการลดการปล่อย</h3><div id="initiativeList"></div></section></div></section>
-      <section id="practitioner" class="view"><div class="section-heading"><div><p class="eyebrow">GHG practitioner workspace</p><h2 data-i18n="practitionerTitle">พื้นที่ทำงานของผู้เชี่ยวชาญ GHG</h2></div></div><div id="practitionerBoard" class="cards-grid"></div></section>
-      <section id="reports" class="view"><div class="section-heading"><div><p class="eyebrow">Report generation</p><h2 data-i18n="reportsTitle">ตัวอย่างรายงาน</h2></div><button class="primary-button" type="button" id="copyReport" data-i18n="copyReport">คัดลอกสรุปรายงาน</button></div><article class="panel report-preview" id="reportPreview"></article></section>
-      <section id="references" class="view"><div class="section-heading"><div><p class="eyebrow">TGO references</p><h2 data-i18n="referencesTitle">เอกสารอ้างอิง Emission Factor จาก TGO</h2></div></div><div id="referenceCards" class="cards-grid"></div></section>
+      <section id="activity" class="view"><div class="section-heading"><div><p class="eyebrow">Activity data</p><h2 data-i18n="activityTitle">เธเนเธญเธกเธนเธฅเธเธดเธเธเธฃเธฃเธก</h2></div></div><div id="demoEntryMount"></div><div class="panel table-panel"><table><thead><tr><th data-i18n="activity">เธเธดเธเธเธฃเธฃเธก</th><th data-i18n="site">เธชเธ–เธฒเธเธ—เธตเน</th><th data-i18n="scope">Scope</th><th data-i18n="quantity">เธเธฃเธดเธกเธฒเธ“</th><th data-i18n="factor">Factor</th><th data-i18n="emissions">tCO2e</th><th data-i18n="evidence">เธซเธฅเธฑเธเธเธฒเธ</th></tr></thead><tbody id="activityRows"></tbody></table></div></section>
+      <section id="factors" class="view"><div class="section-heading"><div><p class="eyebrow">Emission factor master</p><h2 data-i18n="factorTitle">เธเธฒเธเธเนเธญเธกเธนเธฅเธเนเธฒ Emission Factor</h2></div></div><div class="panel table-panel"><table><thead><tr><th data-i18n="sourceName">เนเธซเธฅเนเธเธเธณเน€เธเธดเธ”</th><th data-i18n="factor">Factor</th><th data-i18n="unit">เธซเธเนเธงเธข</th><th data-i18n="source">เธ—เธตเนเธกเธฒ</th><th data-i18n="year">เธเธต</th></tr></thead><tbody id="factorRows"></tbody></table></div></section>
+      <section id="project" class="view"><div class="section-heading"><div><p class="eyebrow">ISO 14064-2:2019</p><h2 data-i18n="projectTitle">เธเธฑเธเธเธตเธเนเธฒเธเน€เธฃเธทเธญเธเธเธฃเธฐเธเธเธฃเธฐเธ”เธฑเธเนเธเธฃเธเธเธฒเธฃ</h2></div></div><div id="projectCards" class="cards-grid"></div></section>
+      <section id="planning" class="view"><div class="section-heading"><div><p class="eyebrow">Carbon management planning</p><h2 data-i18n="planningTitle">เนเธเธเธเธฃเธดเธซเธฒเธฃเธเธฑเธ”เธเธฒเธฃเธเธฒเธฃเนเธเธญเธ</h2></div></div><div class="content-grid"><section class="panel"><h3 data-i18n="targetPathway">เน€เธเนเธฒเธซเธกเธฒเธขเนเธฅเธฐเน€เธชเนเธเธ—เธฒเธเธฅเธ”เธเธฒเธฃเนเธเธญเธ</h3><div id="targetSummary"></div></section><section class="panel"><h3 data-i18n="initiatives">เธกเธฒเธ•เธฃเธเธฒเธฃเธฅเธ”เธเธฒเธฃเธเธฅเนเธญเธข</h3><div id="initiativeList"></div></section></div></section>
+      <section id="practitioner" class="view"><div class="section-heading"><div><p class="eyebrow">GHG practitioner workspace</p><h2 data-i18n="practitionerTitle">เธเธทเนเธเธ—เธตเนเธ—เธณเธเธฒเธเธเธญเธเธเธนเนเน€เธเธตเนเธขเธงเธเธฒเธ GHG</h2></div></div><div id="practitionerBoard" class="cards-grid"></div></section>
+      <section id="reports" class="view"><div class="section-heading"><div><p class="eyebrow">Report generation</p><h2 data-i18n="reportsTitle">เธ•เธฑเธงเธญเธขเนเธฒเธเธฃเธฒเธขเธเธฒเธ</h2></div><button class="primary-button" type="button" id="copyReport" data-i18n="copyReport">เธเธฑเธ”เธฅเธญเธเธชเธฃเธธเธเธฃเธฒเธขเธเธฒเธ</button></div><article class="panel report-preview" id="reportPreview"></article></section>
+      <section id="references" class="view"><div class="section-heading"><div><p class="eyebrow">TGO references</p><h2 data-i18n="referencesTitle">เน€เธญเธเธชเธฒเธฃเธญเนเธฒเธเธญเธดเธ Emission Factor เธเธฒเธ TGO</h2></div></div><div id="referenceCards" class="cards-grid"></div></section>
     </main>
     <script src="app.js"></script>
+    <script src="demo-entry.js"></script>
   </body>
 </html>

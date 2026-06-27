@@ -1,0 +1,155 @@
+(function () {
+  var storageKey = 'esg-carbon-report-assistant-demo-activities-v1';
+  var seedCount = Array.isArray(window.activities) ? window.activities.length : 0;
+
+  function txt(th, en) {
+    return window.state && window.state.lang === 'th' ? th : en;
+  }
+
+  function safe(value) {
+    return String(value || '').replace(/[&<>"']/g, function (char) {
+      return ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' })[char];
+    });
+  }
+
+  function saveCustomActivities() {
+    window.localStorage.setItem(storageKey, JSON.stringify(window.activities.slice(seedCount)));
+  }
+
+  function loadCustomActivities() {
+    try {
+      var saved = JSON.parse(window.localStorage.getItem(storageKey) || '[]');
+      if (!Array.isArray(saved)) return;
+      saved.forEach(function (activity) {
+        if (activity && activity.factorId && Number(activity.qty) > 0) window.activities.push(activity);
+      });
+    } catch (_error) {
+      window.localStorage.removeItem(storageKey);
+    }
+  }
+
+  function renderActivityRowsWithActions() {
+    var body = document.getElementById('activityRows');
+    if (!body) return;
+
+    body.innerHTML = window.activities.map(function (activity, index) {
+      var factor = window.F(activity.factorId);
+      var isCustom = index >= seedCount;
+      var activityName = window.L(activity.th, activity.en);
+      var siteName = window.L(activity.siteTh, activity.siteEn);
+      var actionCell = isCustom
+        ? '<button class="text-button danger" type="button" data-delete-demo="' + index + '">' + txt('ลบ', 'Delete') + '</button>'
+        : '';
+
+      return '<tr>' +
+        '<td>' + safe(activityName) + (isCustom ? ' <span class="demo-chip">' + txt('ข้อมูลที่คีย์เอง', 'Custom') + '</span>' : '') + '</td>' +
+        '<td>' + safe(siteName) + '</td>' +
+        '<td>' + safe(activity.scope) + '</td>' +
+        '<td>' + window.N(activity.qty, 0) + ' ' + safe(activity.unit) + '</td>' +
+        '<td>' + factor.factor + ' ' + safe(factor.unit) + '</td>' +
+        '<td><strong>' + window.N(window.E(activity)) + '</strong></td>' +
+        '<td>' + window.tag(activity.evidence) + '</td>' +
+        '<td>' + actionCell + '</td>' +
+      '</tr>';
+    }).join('');
+
+    document.querySelectorAll('[data-delete-demo]').forEach(function (button) {
+      button.addEventListener('click', function () {
+        window.activities.splice(Number(button.dataset.deleteDemo), 1);
+        saveCustomActivities();
+        window.renderAll();
+        renderDemoEntry();
+      });
+    });
+  }
+
+  function renderDemoEntry() {
+    var mount = document.getElementById('demoEntryMount');
+    if (!mount) return;
+
+    var factorOptions = window.factors.map(function (factor) {
+      return '<option value="' + safe(factor.id) + '">' +
+        safe(window.L(factor.th, factor.en)) + ' - ' + factor.factor + ' ' + safe(factor.unit) +
+      '</option>';
+    }).join('');
+
+    mount.innerHTML =
+      '<section class="panel demo-entry">' +
+        '<div class="demo-entry-head">' +
+          '<div>' +
+            '<h3>' + txt('เพิ่มข้อมูลกิจกรรมแบบ Demo', 'Add Demo Activity Record') + '</h3>' +
+            '<p>' + txt('บันทึกใน browser นี้ด้วย localStorage เพื่อสาธิตการคีย์ข้อมูลบน GitHub Pages ข้อมูลนี้ยังไม่ใช่ฐานข้อมูลกลาง', 'Saved only in this browser with localStorage for GitHub Pages demo. This is not a shared database.') + '</p>' +
+          '</div>' +
+          '<button id="resetDemoData" class="ghost-button" type="button">' + txt('ล้างข้อมูลที่คีย์เอง', 'Reset custom data') + '</button>' +
+        '</div>' +
+        '<form id="demoActivityForm" class="demo-form">' +
+          '<label>' + txt('กิจกรรม', 'Activity') + '<input name="activity" required placeholder="' + txt('เช่น ไฟฟ้าที่ซื้อ', 'e.g. Purchased electricity') + '"></label>' +
+          '<label>' + txt('สถานที่', 'Site') + '<input name="site" required placeholder="' + txt('เช่น โรงงานระยอง', 'e.g. Rayong Plant') + '"></label>' +
+          '<label>Scope<select name="scope"><option>Scope 1</option><option>Scope 2</option><option>Scope 3</option></select></label>' +
+          '<label>' + txt('ปริมาณ', 'Quantity') + '<input name="qty" required type="number" min="0" step="0.001"></label>' +
+          '<label>' + txt('หน่วย', 'Unit') + '<input name="unit" required placeholder="kWh, L, kg, km"></label>' +
+          '<label>Emission Factor<select name="factorId">' + factorOptions + '</select></label>' +
+          '<label>' + txt('หลักฐาน', 'Evidence') + '<select name="evidence"><option value="ready">' + txt('ครบ', 'Ready') + '</option><option value="review">' + txt('รอตรวจ', 'Review') + '</option><option value="missing">' + txt('ขาด', 'Missing') + '</option></select></label>' +
+          '<div class="demo-actions"><strong id="demoPreview">0.0 tCO2e</strong><button class="primary-button" type="submit">' + txt('บันทึก Demo', 'Save demo record') + '</button></div>' +
+        '</form>' +
+      '</section>';
+
+    var form = document.getElementById('demoActivityForm');
+    var previewNode = document.getElementById('demoPreview');
+
+    function preview() {
+      var quantity = Number(form.qty.value || 0);
+      var factor = window.F(form.factorId.value);
+      previewNode.textContent = window.N(factor ? quantity * factor.factor / 1000 : 0) + ' tCO2e';
+    }
+
+    form.qty.addEventListener('input', preview);
+    form.factorId.addEventListener('change', preview);
+    form.addEventListener('submit', function (event) {
+      event.preventDefault();
+      var factor = window.F(form.factorId.value);
+      window.activities.push({
+        th: form.activity.value,
+        en: form.activity.value,
+        siteTh: form.site.value,
+        siteEn: form.site.value,
+        scope: form.scope.value,
+        qty: Number(form.qty.value),
+        unit: form.unit.value || factor.unit.replace('kgCO2e/', ''),
+        factorId: form.factorId.value,
+        evidence: form.evidence.value
+      });
+      saveCustomActivities();
+      form.reset();
+      preview();
+      window.renderAll();
+      renderDemoEntry();
+    });
+
+    document.getElementById('resetDemoData').addEventListener('click', function () {
+      window.localStorage.removeItem(storageKey);
+      window.activities.splice(seedCount);
+      window.renderAll();
+      renderDemoEntry();
+    });
+
+    preview();
+  }
+
+  function install() {
+    loadCustomActivities();
+    window.renderActivity = renderActivityRowsWithActions;
+    var oldRenderAll = window.renderAll;
+    window.renderAll = function () {
+      oldRenderAll();
+      renderDemoEntry();
+    };
+    window.renderAll();
+  }
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', install);
+  } else {
+    install();
+  }
+})();
