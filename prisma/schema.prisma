@@ -1,0 +1,241 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum Role {
+  ADMIN
+  ESG_MANAGER
+  DATA_OWNER
+  REVIEWER
+  VIEWER
+}
+
+enum Scope {
+  SCOPE_1
+  SCOPE_2
+  SCOPE_3
+}
+
+enum EvidenceType {
+  ELECTRICITY_BILL
+  FUEL_INVOICE
+  REFRIGERANT_SERVICE_RECORD
+  WASTE_MANIFEST
+  TRANSPORT_DOCUMENT
+  PRODUCTION_REPORT
+  METER_READING
+  PURCHASE_RECORD
+  OTHER
+}
+
+enum DataQualityRating {
+  HIGH
+  MEDIUM
+  LOW
+  ESTIMATED
+}
+
+enum FactorVerificationStatus {
+  DEMO
+  PENDING_REVIEW
+  VERIFIED
+}
+
+enum RecordStatus {
+  DRAFT
+  READY
+  REVIEWED
+  REJECTED
+  INACTIVE
+}
+
+model Organization {
+  id                    String   @id @default(cuid())
+  name                  String
+  taxId                 String?
+  reportingYear         Int
+  baseYear              Int?
+  organizationalBoundary String
+  operationalBoundary   String
+  consolidationApproach String
+  assumptions           String?
+  exclusions            String?
+  createdAt             DateTime @default(now())
+  updatedAt             DateTime @updatedAt
+  sites                 Site[]
+  departments           Department[]
+  reportingPeriods      ReportingPeriod[]
+  users                 User[]
+  reports               Report[]
+}
+
+model User {
+  id             String       @id @default(cuid())
+  name           String
+  email          String       @unique
+  role           Role
+  organizationId String
+  organization   Organization @relation(fields: [organizationId], references: [id])
+}
+
+model Site {
+  id             String       @id @default(cuid())
+  name           String
+  address        String?
+  organizationId String
+  organization   Organization @relation(fields: [organizationId], references: [id])
+  activities     ActivityData[]
+}
+
+model Department {
+  id             String       @id @default(cuid())
+  name           String
+  organizationId String
+  organization   Organization @relation(fields: [organizationId], references: [id])
+  activities     ActivityData[]
+}
+
+model ReportingPeriod {
+  id             String       @id @default(cuid())
+  label          String
+  startDate      DateTime
+  endDate        DateTime
+  organizationId String
+  organization   Organization @relation(fields: [organizationId], references: [id])
+  activities     ActivityData[]
+  calculationRuns CalculationRun[]
+}
+
+model EmissionFactor {
+  id            String   @id @default(cuid())
+  factorCode    String
+  factorName    String
+  activityType  String
+  gasType       String
+  unit          String
+  kgCO2ePerUnit Decimal  @db.Decimal(18, 8)
+  source        String
+  sourceYear    Int
+  version       String
+  effectiveDate DateTime
+  expiryDate    DateTime?
+  countryRegion String
+  referenceNote String?
+  isActive      Boolean  @default(true)
+  verificationStatus FactorVerificationStatus @default(DEMO)
+  createdAt     DateTime @default(now())
+  activityData  ActivityData[]
+
+  @@unique([factorCode, version])
+}
+
+model ActivityData {
+  id                  String            @id @default(cuid())
+  reportingPeriodId   String
+  reportingPeriod     ReportingPeriod   @relation(fields: [reportingPeriodId], references: [id])
+  activityMonth       String
+  siteId              String
+  site                Site              @relation(fields: [siteId], references: [id])
+  departmentId        String
+  department          Department        @relation(fields: [departmentId], references: [id])
+  activityType        String
+  scope               Scope
+  category            String
+  originalQuantity    Decimal           @db.Decimal(18, 6)
+  originalUnit        String
+  normalizedQuantity  Decimal?          @db.Decimal(18, 6)
+  normalizedUnit      String?
+  dataSource          String
+  evidenceFileRef     String?
+  responsiblePerson   String
+  remark              String?
+  dataQualityRating   DataQualityRating
+  status              RecordStatus       @default(DRAFT)
+  emissionFactorId    String
+  emissionFactor      EmissionFactor    @relation(fields: [emissionFactorId], references: [id])
+  evidenceItems       Evidence[]
+  calculationResults  CalculationResult[]
+  createdAt           DateTime          @default(now())
+  updatedAt           DateTime          @updatedAt
+}
+
+model Evidence {
+  id             String       @id @default(cuid())
+  activityDataId String
+  activityData   ActivityData @relation(fields: [activityDataId], references: [id])
+  evidenceType   EvidenceType
+  fileName       String?
+  fileUrl        String?
+  documentDate   DateTime?
+  dataPeriod     String?
+  owner          String?
+  status         RecordStatus @default(DRAFT)
+  reviewerComment String?
+  note           String?
+  uploadedAt     DateTime     @default(now())
+}
+
+model CalculationRun {
+  id                String              @id @default(cuid())
+  reportingPeriodId String
+  reportingPeriod   ReportingPeriod     @relation(fields: [reportingPeriodId], references: [id])
+  version           Int
+  methodology       String
+  status            String
+  createdBy         String
+  createdAt         DateTime            @default(now())
+  results           CalculationResult[]
+}
+
+model CalculationResult {
+  id                    String         @id @default(cuid())
+  calculationRunId       String
+  calculationRun         CalculationRun @relation(fields: [calculationRunId], references: [id])
+  activityDataId         String
+  activityData           ActivityData   @relation(fields: [activityDataId], references: [id])
+  emissionFactorId       String
+  emissionFactorVersion  String
+  quantityUsed           Decimal        @db.Decimal(18, 6)
+  unitUsed               String
+  kgCO2e                 Decimal        @db.Decimal(18, 6)
+  tCO2e                  Decimal        @db.Decimal(18, 6)
+  uncertaintyNote        String?
+  calculationFormula     String
+  createdAt              DateTime       @default(now())
+}
+
+model VerificationItem {
+  id             String   @id @default(cuid())
+  title          String
+  itemType       String
+  status         String
+  owner          String
+  dueDate        DateTime?
+  note           String?
+  createdAt      DateTime @default(now())
+}
+
+model ChangeLog {
+  id          String   @id @default(cuid())
+  entityType  String
+  entityId    String
+  action      String
+  description String
+  changedBy   String
+  changedAt   DateTime @default(now())
+}
+
+model Report {
+  id             String       @id @default(cuid())
+  organizationId String
+  organization   Organization @relation(fields: [organizationId], references: [id])
+  title          String
+  reportYear     Int
+  contentJson    Json
+  createdAt      DateTime     @default(now())
+}
