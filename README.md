@@ -1,106 +1,191 @@
 # ESG Carbon Report Assistant
 
-## Status
+> **TH:** ระบบ Web Application / Dashboard / Internal Tool สำหรับงาน ISO, Carbon, ESG, Audit, Checklist และ GHG reporting
+>
+> **EN:** A bilingual ESG/GHG carbon reporting dashboard and internal tool for ISO 14064-1, TGO CFO, audit readiness, and evidence-driven reporting workflows.
 
-**MVP**
+## 1. Project Name
 
-This project is more than a static prototype: it has a working Next.js UI, bilingual TH/EN interface, demo data fallback, Prisma-ready PostgreSQL schema, CRUD APIs, data-entry forms, calculation preview, export routes, and build/test scripts. It is not yet fully production-ready because authentication, production file storage, and deployment hardening are still pending.
+**ESG Carbon Report Assistant**
 
-## Overview
+Repository package name: `esg-carbon-report-assistant`
 
-ESG Carbon Report Assistant is a web application for Carbon Footprint for Organization (CFO), GHG inventory, ISO 14064-1 reporting, TGO-aligned evidence readiness, and ESG report preparation.
+## 2. Status
 
-The app helps SME factories, ESG teams, consultants, auditors, and management teams collect carbon activity data, preserve emission factor versions, link evidence, review readiness gaps, and generate structured ESG/GHG report outputs.
+**Status: MVP**
 
-The repository is safe to use as a portfolio, MVP, client demo, or foundation for a production implementation.
+This project is classified as an **MVP**, not just a prototype, because it includes a working Next.js application, dashboard pages, bilingual TH/EN UI, demo data fallback, Prisma-ready PostgreSQL schema, CRUD APIs, CRUD data-entry forms, calculation preview, export routes, and build/test scripts.
 
-## Key Features
+It is **not marked as Production-ready** because the current codebase does not yet include full authentication, production RBAC enforcement, production file upload storage, deployment infrastructure, monitoring, backup strategy, or a complete security hardening process.
 
-- Executive dashboard with total emissions, scope totals, monthly trend, category chart, site summary, hotspots, and evidence completeness.
-- Organization and boundary setup for reporting year, base year, consolidation approach, facilities, departments, assumptions, and exclusions.
-- Activity data CRUD UI with required-field validation, duplicate checks, evidence warnings, EF warnings, and tCO2e preview.
-- Emission factor master with versioned factors, metadata-only edits, deactivation, verification status, and historical EF preservation.
-- Evidence metadata register with activity linking, owner, status, document date, URL, and reviewer comments.
-- Verification workspace with checklist, data gaps, calculation audit trail, and change log notes.
-- Structured report page and export endpoints for CSV, Excel workbook, evidence register, and report HTML/PDF-style output.
-- Prisma-ready PostgreSQL data model with demo fallback when `DATABASE_URL` is not configured.
-- Bilingual Thai/English UI toggle for key screens, labels, validation, warnings, and user workflows.
-- Role model for Admin, ESG Manager, Data Owner, Reviewer, and Viewer.
+> **TH:** สถานะคือ MVP เพราะใช้งาน demo และ data-entry flow ได้จริงแล้ว แต่ยังไม่ควรเรียกว่า Production-ready จนกว่าจะเพิ่ม Auth, deployment, security hardening และ production storage ให้ครบ
 
-## Target Users
+## 3. Overview
+
+ESG Carbon Report Assistant is a full-stack web application for organizations that need to collect, calculate, review, and report greenhouse gas activity data.
+
+The app is designed for Carbon Footprint for Organization (CFO), GHG Inventory, ISO 14064-1 reporting, Thailand TGO-aligned evidence readiness, internal audit preparation, and ESG management dashboards.
+
+It supports two operating modes:
+
+- **Demo Mode:** runs with in-repository sample data when `DATABASE_URL` is not configured.
+- **Database Mode:** uses PostgreSQL through Prisma when `DATABASE_URL` is configured.
+
+> **TH:** ระบบนี้ช่วยให้โรงงานหรือองค์กร SME ทดลองเก็บข้อมูลกิจกรรมคาร์บอน เลือก emission factor แนบหลักฐาน ตรวจความพร้อม และดู dashboard/report ได้ใน flow เดียว
+
+## 4. Problem Statement
+
+Many SME factories and ESG teams still manage GHG inventory work through spreadsheets, email attachments, manual evidence folders, and disconnected emission factor tables. This creates several risks:
+
+- Carbon activity data is scattered across teams.
+- Evidence is often missing or difficult to trace before audit.
+- Emission factor values may be overwritten without version history.
+- Calculation results may not preserve original quantity, unit, EF ID, and EF version.
+- Management dashboards and reports take too long to prepare.
+- Audit and verification readiness is hard to review consistently.
+
+> **TH:** ปัญหาหลักคือข้อมูลกระจัดกระจาย หลักฐานไม่ครบ และการคำนวณย้อนกลับยาก โดยเฉพาะเมื่อทำงานผ่าน Excel หลายไฟล์
+
+## 5. Objectives
+
+- Provide a practical ESG/GHG dashboard for SME and internal team workflows.
+- Preserve activity data, original units, responsible persons, evidence references, and data quality status.
+- Maintain emission factor versions without overwriting historical records.
+- Support demo presentations without requiring a database.
+- Prepare the system for PostgreSQL-backed database mode.
+- Create a clean portfolio-ready GitHub repository with documentation and security-safe configuration.
+- Provide a future foundation for authentication, PWA, mobile app, and enterprise deployment.
+
+## 6. Key Features
+
+- Dashboard with total emissions, scope summary, monthly trend, category chart, site summary, hotspot ranking, and evidence completeness.
+- Organization and boundary page for reporting year, base year, consolidation approach, operational boundary, facilities, departments, assumptions, and exclusions.
+- Activity data CRUD UI with add/edit/delete actions, validation, duplicate checks, evidence warnings, EF warnings, and tCO2e preview.
+- Emission factor master with versioned factors, metadata-only edits, deactivation flow, verification status, and historical preservation rules.
+- Evidence metadata register with activity linking, document date, data period, URL, owner, status, reviewer comments, and notes.
+- Verification workspace with checklist, data gap report, calculation audit trail, and change log notes.
+- Structured ESG/GHG report page with organization profile, boundary, methodology, inventory summary, hotspots, evidence summary, assumptions, exclusions, and verification readiness.
+- Export endpoints for CSV, Excel workbook, evidence register, and report output.
+- Prisma schema for organizations, facilities, departments, reporting periods, activity records, emission factors, evidence, calculation results, audit logs, reports, users, and roles.
+- TH/EN language toggle for key screens, navigation, forms, validations, warnings, and system messages.
+
+## 7. Target Users
 
 - Admin
 - ESG Manager
 - Data Owner
 - Reviewer
-- Auditor / Verifier
-- ESG or carbon consultant
-- Production, facility, logistics, procurement, and HR teams
-- Management team reviewing GHG inventory status
+- ISO Officer
+- Internal Auditor
+- External Verifier
+- ESG / Carbon Consultant
+- Production Team
+- Facility / Maintenance Team
+- Procurement / Logistics / HR Teams
+- Management Team
 
-## Use Cases
+## 8. Use Cases
 
-- Demonstrate an ESG/GHG data-entry workflow to an SME factory.
-- Record monthly activity data such as electricity, diesel, LPG, refrigerants, materials, waste, water, and travel.
-- Maintain an emission factor master without overwriting historical factor versions.
+- Demonstrate a carbon accounting MVP to SME factories.
+- Record monthly electricity, fuel, refrigerant, material, waste, water, and travel activity data.
+- Maintain a version-controlled emission factor master.
 - Link evidence metadata to activity records before verification.
-- Prepare a CFO/GHG inventory dashboard for management review.
-- Identify missing evidence and data quality gaps before audit or third-party verification.
+- Review missing evidence and data quality gaps.
+- Prepare an ISO 14064-1 / TGO CFO-aligned GHG inventory dashboard.
 - Export activity data, calculation workbook, evidence register, and report output.
+- Use demo mode for client presentations without setting up PostgreSQL.
+- Use database mode as a foundation for real implementation.
 
-## Tech Stack
+## 9. Tech Stack
 
-- **Frontend:** Next.js App Router, React, TypeScript
-- **Styling:** Tailwind CSS
-- **Backend:** Next.js route handlers
-- **Database:** PostgreSQL in database mode
-- **ORM:** Prisma
-- **Validation:** Zod
-- **Charts:** Recharts
-- **Exports:** ExcelJS, PDFKit, CSV routes
-- **Testing:** TypeScript typecheck and calculation-engine test
-- **Deployment target:** Vercel, Render, Railway, VPS, or internal server
+| Layer | Technology |
+| --- | --- |
+| Frontend | Next.js 14 App Router, React 18, TypeScript |
+| Styling | Tailwind CSS |
+| Backend | Next.js Route Handlers |
+| Database | PostgreSQL in database mode |
+| ORM | Prisma |
+| Validation | Zod |
+| Charts | Recharts |
+| Export | CSV routes, ExcelJS, PDFKit / structured report output |
+| Testing | TypeScript typecheck, calculation engine test |
+| Dev Runtime | Node.js, npm |
+| Deployment Target | Vercel, Render, Railway, VPS, or internal server |
 
-## Project Structure
+## 10. Project Structure
 
 ```text
 /
-├── README.md
-├── package.json
-├── .gitignore
-├── .env.example
-├── docs/
-│   ├── overview.md
-│   ├── system-flow.md
-│   ├── tech-stack.md
-│   ├── modules.md
-│   └── screenshots/
-├── prisma/
-│   ├── schema.prisma
-│   └── seed.ts
-├── public/
-├── references/
-├── src/
-│   ├── app/
-│   ├── components/
-│   └── lib/
-├── index.html
-└── app.js
+|-- README.md
+|-- package.json
+|-- package-lock.json
+|-- .gitignore
+|-- .env.example
+|-- LICENSE
+|-- docs/
+|   |-- overview.md
+|   |-- system-flow.md
+|   |-- tech-stack.md
+|   |-- modules.md
+|   |-- screenshots/
+|-- prisma/
+|   |-- schema.prisma
+|   |-- seed.ts
+|-- public/
+|   |-- references/
+|-- references/
+|-- src/
+|   |-- app/
+|   |   |-- page.tsx
+|   |   |-- activity-data/
+|   |   |-- emission-factors/
+|   |   |-- evidence/
+|   |   |-- organization-boundary/
+|   |   |-- reports/
+|   |   |-- verification/
+|   |   |-- api/
+|   |-- components/
+|   |   |-- forms/
+|   |   |-- app-shell.tsx
+|   |   |-- dashboard-charts.tsx
+|   |   |-- language-provider.tsx
+|   |   |-- ui.tsx
+|   |-- lib/
+|       |-- calculation-engine.ts
+|       |-- data.ts
+|       |-- exporters.ts
+|       |-- i18n.ts
+|       |-- sample-data.ts
+|       |-- types.ts
+|-- index.html
+|-- app.js
+|-- styles.css
 ```
 
-`index.html`, `styles.css`, and `app.js` are retained as an earlier static prototype. The active application is the Next.js app under `src/`.
+Notes:
 
-## Getting Started
+- `src/` contains the active Next.js application.
+- `prisma/` contains the database schema and seed script.
+- `docs/` contains supporting documentation for portfolio and handoff.
+- `index.html`, `app.js`, and `styles.css` are retained as an earlier static prototype.
 
-### Install Dependencies
+## 11. Getting Started
+
+### Prerequisites
+
+- Node.js
+- npm
+- PostgreSQL only if using database mode
+
+### Install
 
 ```bash
 npm install
 ```
 
-### Demo Mode
+### Run In Demo Mode
 
-Demo mode works without `.env` and without PostgreSQL. The app uses sample data from the repository and is suitable for demos, portfolio review, and user walkthroughs.
+Demo mode works without `.env` and without PostgreSQL.
 
 ```bash
 npm run dev
@@ -112,99 +197,139 @@ Open:
 http://localhost:3000
 ```
 
-In demo mode, add/edit/delete actions show the real UI flow but do not persist changes until `DATABASE_URL` is configured.
+In demo mode, the UI loads sample data and all major pages can be reviewed. Add/edit/delete forms can be opened, but changes are preview-only until `DATABASE_URL` is configured.
 
-### Database Mode
+### Run In Database Mode
 
-1. Copy the environment template:
+Copy the environment template:
 
 ```bash
 copy .env.example .env
 ```
 
-2. Edit `.env` and set a real PostgreSQL connection string:
+Set a real PostgreSQL connection string in `.env`:
 
 ```env
 DATABASE_URL="postgresql://USER:PASSWORD@HOST:5432/esg_carbon_assistant?schema=public"
 NEXT_PUBLIC_APP_NAME="ESG Carbon Report Assistant"
 ```
 
-3. Generate Prisma client:
+Generate Prisma client:
 
 ```bash
 npm run db:generate
 ```
 
-4. Run migration:
+Run migration:
 
 ```bash
 npm run db:migrate
 ```
 
-5. Seed demo records:
+Seed sample data:
 
 ```bash
 npm run db:seed
 ```
 
-6. Start the app:
+Start development server:
 
 ```bash
 npm run dev
 ```
 
-## Environment Variables
-
-| Variable | Required | Description |
-| --- | --- | --- |
-| `DATABASE_URL` | Optional for demo, required for database mode | PostgreSQL connection string used by Prisma. Do not commit real values. |
-| `NEXT_PUBLIC_APP_NAME` | Optional | Public display name for the app. |
-
-Only `.env.example` should be committed. Real `.env` files are ignored by `.gitignore`.
-
-## Scripts
+### Quality Checks
 
 ```bash
-npm run dev
 npm run typecheck
 npm run test
 npm run build
-npm run start
-npm run db:generate
-npm run db:migrate
-npm run db:seed
 ```
 
-## Screenshots
+## 12. Environment Variables
 
-Screenshot placeholders are prepared in `docs/screenshots/`.
+| Variable | Required | Description |
+| --- | --- | --- |
+| `DATABASE_URL` | Optional for demo mode, required for database mode | PostgreSQL connection string used by Prisma. Use a real value only in `.env`, never in committed files. |
+| `NEXT_PUBLIC_APP_NAME` | Optional | Public app display name. Safe because it is exposed to the browser. |
 
-Recommended screenshots for a GitHub README or product deck:
+Do not commit real `.env` files. This repository only includes `.env.example` with placeholder values.
+
+## 13. Screenshots
+
+Screenshot folder:
+
+```text
+docs/screenshots/
+```
+
+Recommended portfolio screenshots:
 
 - `docs/screenshots/dashboard.png`
 - `docs/screenshots/activity-data.png`
 - `docs/screenshots/emission-factors.png`
+- `docs/screenshots/evidence.png`
 - `docs/screenshots/report-page.png`
 - `docs/screenshots/mobile-view.png`
 
-## Roadmap
+TODO:
 
-- **Phase 1:** Static prototype and UX direction.
-- **Phase 2:** Next.js MVP, demo mode, Prisma schema, CRUD APIs, data-entry UI, bilingual UI, reports, verification workspace.
-- **Phase 3:** Authentication, role-protected workflows, production file upload storage, stronger audit log views, real deployment.
-- **Phase 4:** PWA/mobile-ready workflow, offline capture, Flutter/mobile app option, enterprise integrations.
+- Add real screenshots after final UI review.
+- Avoid screenshots containing real customer data, employee data, internal evidence, or private URLs.
 
-## Security Notes
+## 14. Roadmap
 
-- This repository is designed to use demo/sample data only.
+### Phase 1: Prototype
+
+- Static UI concept
+- Dashboard direction
+- Early ESG/GHG workflow structure
+
+### Phase 2: MVP
+
+- Next.js application
+- Demo mode fallback
+- Prisma-ready data model
+- CRUD APIs
+- Data-entry UI
+- Bilingual TH/EN interface
+- Dashboard, reports, verification, and exports
+
+### Phase 3: Production Foundation
+
+- Authentication
+- Role-based access control enforcement
+- Production database setup
+- Real evidence file upload storage
+- Audit log UI
+- Deployment pipeline
+- Backup and environment management
+
+### Phase 4: Mobile / Enterprise Expansion
+
+- PWA support
+- Mobile-friendly data capture
+- Offline-first activity input
+- Flutter or native mobile app option
+- Enterprise integrations
+- Advanced report templates
+
+## 15. Security Notes
+
+- This repository is intended to contain demo/sample data only.
 - Do not commit `.env`, real database URLs, API keys, service accounts, private tokens, customer data, employee data, internal ISO documents, internal Excel files, or real audit evidence.
-- `.gitignore` excludes common secret and local build files.
-- `.env.example` contains placeholders only.
-- The included TGO reference PDFs should be reviewed for license/redistribution requirements before publishing a public repository.
-- Authentication and production role enforcement are not implemented yet.
+- `.gitignore` excludes common secret files, local build outputs, and dependency folders.
+- `.env.example` uses placeholder values only.
+- Authentication screens and production RBAC enforcement are not implemented yet.
+- Evidence upload currently stores metadata/URLs only; production file storage is TODO.
+- TGO reference PDFs included in `references/` and `public/references/` should be reviewed for license and redistribution requirements before publishing a public repository.
 
-## License
+## 16. License / Usage Note
 
-Internal / Demo Use Only.
+**Internal / Demo Use Only**
 
-If this project will be open-sourced later, replace this section with an approved open-source license such as MIT, Apache-2.0, or a private commercial license.
+This repository is prepared for portfolio demonstration, MVP validation, and internal prototype development.
+
+If the project will be released publicly as open source, replace the current usage note with an approved license such as MIT, Apache-2.0, or a private commercial license.
+
+> **TH:** โปรเจกต์นี้เหมาะสำหรับ Demo, Portfolio และ MVP validation ก่อนต่อยอดเป็นระบบใช้งานจริง กรุณาอย่าใส่ข้อมูลลูกค้าจริงหรือข้อมูลลับลงใน repository
