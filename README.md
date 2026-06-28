@@ -51,9 +51,7 @@ MVP
 
 ## Screenshots
 
-Add assistant and dashboard screenshots here after UI review.
-
-Suggested path: docs/screenshots/dashboard.png
+![ESG Carbon Report Assistant](assets/screenshots/assistant.png)
 
 ## Consultant Context
 
